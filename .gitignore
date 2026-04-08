@@ -1,13 +1,34 @@
+# Secret keys — NEVER commit
+.env
+
+# Large data files
 data/trajectories/
 data/trajectories_backup/
+
+# Training outputs (large files)
 outputs/
 outputs_backup/
+
+# HuggingFace / model cache
 cache/
+
+# Logs
 logs/
+
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+
+# Model weights
 *.pt
 *.bin
-.env
+*.safetensors
+
+# Claude session data
+.claude/
+
+# OS files
 .DS_Store
+Thumbs.db
