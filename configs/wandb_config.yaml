@@ -1,0 +1,48 @@
+# ─────────────────────────────────────────────
+# Weights & Biases Configuration for LCLDD
+# ─────────────────────────────────────────────
+
+project: lcldd-slm-reasoning
+entity: null                  # set to your W&B username or team name
+
+run:
+  tags:
+    - lcldd
+    - slm
+    - lyapunov
+    - distillation
+    - recursive-latent-reasoning
+
+# What to log
+log:
+  gradients: true             # log gradient norms each step
+  parameters: false           # skip weight histograms (expensive)
+  frequency: 100              # log every N steps
+
+# Hyperparameter sweep defaults (overridden per stage)
+hyperparameters:
+  # Loss weights
+  lambda_vf: 0.1              # vector field loss weight
+  lambda_lya: 0.1             # Lyapunov loss weight
+  lambda_jac: 0.05            # Jacobian alignment loss weight
+
+  # Lyapunov energy function
+  alpha: 1.0                  # semantic proximity weight
+  beta: 0.1                   # norm regularization weight
+  epsilon: 0.01               # Lyapunov stability margin
+
+  # Thinking block
+  t_max: 20                   # maximum recursive steps
+
+  # Phase-space halting thresholds (learnable, these are init values)
+  tau_delta: 0.01             # latent change threshold
+  tau_energy: 0.5             # Lyapunov energy threshold
+  tau_kappa: 0.9              # answer confidence threshold
+  tau_eta: 0.3                # prediction entropy threshold
+
+  # Training
+  learning_rate: 2.0e-5
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  warmup_steps: 500
+  max_steps: 50000

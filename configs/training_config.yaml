@@ -1,0 +1,86 @@
+# ─────────────────────────────────────────────
+# LCLDD Master Training Configuration
+# ─────────────────────────────────────────────
+
+# ── Models ────────────────────────────────────
+teacher_models:
+  - name: qwen2.5-7b
+    hf_id: Qwen/Qwen2.5-7B-Instruct
+  - name: llama3.1-8b
+    hf_id: meta-llama/Llama-3.1-8B-Instruct
+
+student_models:
+  - name: phi3.5-mini
+    hf_id: microsoft/Phi-3.5-mini-instruct
+    hidden_dim: 2560
+  - name: qwen2.5-1.5b
+    hf_id: Qwen/Qwen2.5-1.5B
+    hidden_dim: 1536
+
+# ── Datasets ──────────────────────────────────
+datasets:
+  - gsm8k
+  - hendrycks_math       # MATH benchmark
+  - bbh                  # BIG-Bench Hard
+  - arc_challenge        # ARC-Challenge
+
+# ── Thinking Block ────────────────────────────
+thinking_block:
+  t_max: 20              # max recursive steps at inference
+  hidden_dim: null       # inherits from student model
+  use_cross_attention: true   # re-attend to h0 each step
+  use_layer_norm: true
+
+# ── Lyapunov Energy ───────────────────────────
+lyapunov:
+  alpha: 1.0
+  beta: 0.1
+  epsilon: 0.01
+
+# ── Loss Weights ──────────────────────────────
+loss_weights:
+  lambda_vf: 0.1
+  lambda_lya: 0.1
+  lambda_jac: 0.05
+
+# ── Halting Thresholds (init, then learned) ───
+halting:
+  tau_delta: 0.01
+  tau_energy: 0.5
+  tau_kappa: 0.9
+  tau_eta: 0.3
+
+# ── Curriculum Stages ─────────────────────────
+curriculum:
+  A_baseline:
+    active_losses: [ans]
+    max_steps: 5000
+  B_recursive:
+    active_losses: [ans]
+    thinking_block_active: true
+    max_steps: 5000
+  C_state_distillation:
+    active_losses: [ans, state]
+    max_steps: 5000
+  D_vector_field:
+    active_losses: [ans, state, vf]
+    max_steps: 10000
+  E_lyapunov:
+    active_losses: [ans, state, vf, lya]
+    max_steps: 10000
+  F_jacobian:
+    active_losses: [ans, state, vf, lya, jac]
+    max_steps: 10000
+  G_halting:
+    active_losses: [ans, state, vf, lya, jac]
+    train_halting_head: true
+    max_steps: 5000
+
+# ── Infrastructure ────────────────────────────
+infrastructure:
+  deepspeed_config: configs/deepspeed_zero2.json
+  precision: fp16
+  gradient_clip: 1.0
+  seed: 42
+  output_dir: outputs/
+  cache_dir: cache/

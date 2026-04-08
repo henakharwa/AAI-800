@@ -1,0 +1,30 @@
+# ─────────────────────────────────────────────
+# LCLDD – Core Dependencies
+# Lyapunov-Constrained Latent Dynamics Distillation
+# ─────────────────────────────────────────────
+
+# Deep learning framework
+torch>=2.3.0
+torchvision>=0.18.0
+
+# HuggingFace ecosystem
+transformers>=4.43.0
+datasets>=2.20.0
+accelerate>=0.31.0
+tokenizers>=0.19.0
+huggingface-hub>=0.23.0
+
+# Distributed training (Linux/WSL only)
+# deepspeed>=0.14.4
+
+# Experiment tracking
+wandb>=0.17.0
+
+# Numerical & scientific computing
+numpy>=1.26.0
+scipy>=1.13.0
+
+# Utilities
+tqdm>=4.66.0
+pyyaml>=6.0.1
+python-dotenv>=1.0.0

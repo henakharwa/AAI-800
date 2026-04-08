@@ -1,0 +1,13 @@
+data/trajectories/
+data/trajectories_backup/
+outputs/
+outputs_backup/
+cache/
+logs/
+__pycache__/
+*.pyc
+*.pyo
+*.pt
+*.bin
+.env
+.DS_Store
